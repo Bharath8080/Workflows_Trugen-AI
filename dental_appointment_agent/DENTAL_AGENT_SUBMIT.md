@@ -48,11 +48,14 @@ curl --request POST \
   "schema": {
     "type": "function",
     "name": "get_availability",
-    "description": "Checks for available time slots.",
+    "description": "This tool checks whether a specific appointment time slot is available on the Pearly Whites Dental calendar using an n8n webhook.",
     "parameters": {
       "type": "object",
       "properties": {
-        "appointmentStartTime": { "type": "string" }
+        "appointmentStartTime": {
+          "type": "string",
+          "description": "The requested appointment start timestamp in Central Time that needs to be checked for availability."
+        }
       },
       "required": ["appointmentStartTime"]
     }
@@ -81,11 +84,14 @@ curl --request POST \
   "schema": {
     "type": "function",
     "name": "create_appointment",
-    "description": "Creates a dental appointment.",
+    "description": "This tool creates a dental appointment in the Pearly Whites Dental scheduling system via an n8n webhook.",
     "parameters": {
       "type": "object",
       "properties": {
-        "appointmentStartTime": { "type": "string" }
+        "appointmentStartTime": {
+          "type": "string",
+          "description": "The confirmed appointment start timestamp in Central Time. The appointment duration is automatically 1 hour."
+        }
       },
       "required": ["appointmentStartTime"]
     }
@@ -114,15 +120,30 @@ curl --request POST \
   "schema": {
     "type": "function",
     "name": "log_patient_details",
-    "description": "Logs patient info.",
+    "description": "This tool logs patient call details and appointment information into a Google Sheet via an n8n webhook.",
     "parameters": {
       "type": "object",
       "properties": {
-        "patientName": { "type": "string" },
-        "callTimestamp": { "type": "string" },
-        "insuranceProvider": { "type": "string" },
-        "appointmentTimestamp": { "type": "string" },
-        "questionsAndConcerns": { "type": "string" }
+        "patientName": {
+          "type": "string",
+          "description": "Full name of the patient who called and booked the appointment."
+        },
+        "callTimestamp": {
+          "type": "string",
+          "description": "The timestamp representing when the patient call was handled. This must be derived from the system time."
+        },
+        "insuranceProvider": {
+          "type": "string",
+          "description": "The patient’s dental insurance provider."
+        },
+        "appointmentTimestamp": {
+          "type": "string",
+          "description": "The confirmed appointment start time that was scheduled using the create_appointment tool."
+        },
+        "questionsAndConcerns": {
+          "type": "string",
+          "description": "Any symptoms, dental issues, or questions the patient mentioned during the call. Leave empty if none were provided."
+        }
       },
       "required": ["patientName", "callTimestamp", "insuranceProvider", "appointmentTimestamp", "questionsAndConcerns"]
     }
@@ -150,11 +171,14 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "schema": {
     "type": "function",
     "name": "get_availability",
-    "description": "Checks for available slots.",
+    "description": "This tool checks whether a specific appointment time slot is available on the Pearly Whites Dental calendar using an n8n webhook.",
     "parameters": {
       "type": "object",
       "properties": {
-        "appointmentStartTime": { "type": "string" }
+        "appointmentStartTime": {
+          "type": "string",
+          "description": "The requested appointment start timestamp in Central Time that needs to be checked for availability."
+        }
       },
       "required": ["appointmentStartTime"]
     }
@@ -178,11 +202,14 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "schema": {
     "type": "function",
     "name": "create_appointment",
-    "description": "Creates an appointment.",
+    "description": "This tool creates a dental appointment in the Pearly Whites Dental scheduling system via an n8n webhook.",
     "parameters": {
       "type": "object",
       "properties": {
-        "appointmentStartTime": { "type": "string" }
+        "appointmentStartTime": {
+          "type": "string",
+          "description": "The confirmed appointment start timestamp in Central Time. The appointment duration is automatically 1 hour."
+        }
       },
       "required": ["appointmentStartTime"]
     }
@@ -206,15 +233,30 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "schema": {
     "type": "function",
     "name": "log_patient_details",
-    "description": "Logs patient info.",
+    "description": "This tool logs patient call details and appointment information into a Google Sheet via an n8n webhook.",
     "parameters": {
       "type": "object",
       "properties": {
-        "patientName": { "type": "string" },
-        "callTimestamp": { "type": "string" },
-        "insuranceProvider": { "type": "string" },
-        "appointmentTimestamp": { "type": "string" },
-        "questionsAndConcerns": { "type": "string" }
+        "patientName": {
+          "type": "string",
+          "description": "Full name of the patient who called and booked the appointment."
+        },
+        "callTimestamp": {
+          "type": "string",
+          "description": "The timestamp representing when the patient call was handled. This must be derived from the system time."
+        },
+        "insuranceProvider": {
+          "type": "string",
+          "description": "The patient’s dental insurance provider."
+        },
+        "appointmentTimestamp": {
+          "type": "string",
+          "description": "The confirmed appointment start time that was scheduled using the create_appointment tool."
+        },
+        "questionsAndConcerns": {
+          "type": "string",
+          "description": "Any symptoms, dental issues, or questions the patient mentioned during the call. Leave empty if none were provided."
+        }
       },
       "required": ["patientName", "callTimestamp", "insuranceProvider", "appointmentTimestamp", "questionsAndConcerns"]
     }
