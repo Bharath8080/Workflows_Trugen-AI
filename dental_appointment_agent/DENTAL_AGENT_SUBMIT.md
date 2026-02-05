@@ -23,7 +23,7 @@ curl --request POST \
 **Using GitHub URL:**
 
 ```bash
-curl -s https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO/main/DENTAL_AGENT_CONFIG.json | \
+curl -s https://raw.githubusercontent.com/Bharath8080/Workflows_Trugen-AI/refs/heads/main/dental_appointment_agent/DENTAL_AGENT_CONFIG.json | \
 curl --request POST \
   --url https://api.trugen.ai/v1/ext/agent \
   --header "Content-Type: application/json" \
