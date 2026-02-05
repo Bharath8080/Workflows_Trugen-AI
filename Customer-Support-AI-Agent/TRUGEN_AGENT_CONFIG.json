@@ -14,7 +14,7 @@
       "avatar_key_id": "80b9095f",
       "config": {
         "llm": {
-          "model": "gpt-4-mini",
+          "model": "gpt-4.1-nano",
           "provider": "openai"
         },
         "stt": {
@@ -25,7 +25,7 @@
         "tts": {
           "model_id": "eleven_turbo_v2_5",
           "provider": "elevenlabs",
-          "voice_id": "ZUrEGyu8GFMwnHbvLhv2"
+          "voice_id": "iP95p4xoKVk53GoZ742B"
         }
       },
       "persona_name": "Customer Support Agent",
