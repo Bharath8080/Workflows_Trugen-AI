@@ -1,0 +1,398 @@
+{
+  "name": "Customer Support Video AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "6404fe0f-aa6a-4e5a-a71c-81a6fcb606af",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "e63fe20d-7847-4a36-9320-6e7c7cc30ccd",
+      "name": "Webhook: Receive User Request (Trugen)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -32,
+        64
+      ],
+      "webhookId": "6404fe0f-aa6a-4e5a-a71c-81a6fcb606af",
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "30990dc0-1513-4bfd-81ba-0202dfda12f2",
+      "name": "Webhook: Return AI Response (Trugen)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        1840,
+        48
+      ],
+      "typeVersion": 1.4
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The call transcription :\n{{ $json.body.searchQuery }}",
+        "options": {
+          "systemMessage": "=## ROLE\nYou are an AI operations agent responsible for handling user requests for a service platform.  \nYour job is to analyze each request, decide the correct action, and call the appropriate tool when necessary.\n\n**Current date and time: {{ $now }}**  \n**Default timezone: IST (Indian Standard Time, UTC+05:30)**\n\nYou must ALWAYS determine the user's intent first before responding.\n\n---\n\n## CORE RESPONSIBILITY\nFor every request, you must:\n1. Think carefully about the request  \n2. Understand the user's intent  \n3. Decide whether a tool is required  \n4. Use the correct tool in the correct order  \n5. Never fabricate data or pretend a tool was used  \n6. **If a tool fails, retry up to 3 times before informing the user**\n\nYou are a tool-dependent assistant. If a tool is required, you MUST use it before responding.\n\n---\n\n## AVAILABLE TOOLS\n\n### think — Internal Reasoning Tool (MANDATORY)\nYou MUST use this tool on EVERY turn before taking any action.  \nAnalyze the user's intent, required tools, and the correct order of operations.\n\n### Google Sheets — Knowledgebase\nUsed for all informational and factual questions about services, pricing, and platform features.\n\n### Google Calendar — Scheduling Tool\nUsed ONLY for booking, checking availability, or rescheduling.\n\n### Gmail Tool — Email Sender\nUsed ONLY after a meeting has been successfully scheduled to send confirmations.\n\n---\n\n## INTENT CLASSIFICATION LOGIC\n1. Information Request → Google Sheets  \n2. Scheduling Request → Google Calendar  \n3. Post-Booking Action → Gmail Tool  \n4. General Conversation → No tool  \n\n---\n\n## SCHEDULING & TIME HANDLING RULES\n\n### Date/Time Context Awareness\n- **Always reference the current date/time:** `{{ $now }}`\n- When users say \"today,\" \"tomorrow,\" \"this Friday,\" \"next week,\" etc., calculate the exact date based on `{{ $now }}`\n- **DO NOT announce date calculations to the user** - calculate silently and proceed directly to checking availability\n\n### Timezone Authority - CRITICAL\n- **User input timezone:** All user-provided times are in **IST (UTC+05:30)**\n- **Calendar storage timezone:** Google Calendar stores all events in **UTC/GMT**\n- **Conversion rule:** When user says a time in IST, you must keep it as IST and let the calendar tool handle UTC conversion\n- **NEVER manually convert IST to GMT** - the Google Calendar tool will do this automatically\n\n### Tool Input Format - CRITICAL\n**You MUST pass dates and times to the Google Calendar tool in this EXACT format:**\n\n`YYYY-MM-DDTHH:mm:ss+05:30`\n\n**The `+05:30` offset is MANDATORY and tells the system this is IST time.**\n\n### Scheduling Process\n1. **Date Calculation:** Use `{{ $now }}` to silently calculate the exact date (DO NOT tell user \"let me confirm the date\")\n2. **Time Formatting:** Format the time in ISO 8601 with `+05:30` offset\n3. **Availability Check:** Check availability using Google Calendar tool with properly formatted time\n4. **Booking:** Only book if the slot is confirmed free, using the same time format\n5. **Email Collection:** Immediately after successful booking confirmation, ask: \"Please provide your email address so I can send you the booking confirmation.\"\n6. **Confirmation Email:** Once email is provided, use Gmail tool to send confirmation with meeting details\n\n### Display Format\n- Always show times to the user in IST (24-hour format): `YYYY-MM-DD HH:mm IST`\n\n---\n\n## TOOL RETRY LOGIC (CRITICAL)\n\n**If ANY tool call fails:**\n\n1. **Attempt 1:** Try the tool call\n2. **If it fails → Attempt 2:** Retry immediately without telling the user\n3. **If it fails → Attempt 3:** Retry one more time\n4. **If it still fails after 3 attempts:** Then inform the user about the issue\n\n**DO NOT give up after the first failure.**\n\n---\n\n## EFFICIENT WORKFLOW (NO UNNECESSARY DELAYS)\n\n- Calculate dates silently using `{{ $now }}`\n- Act immediately - don't announce intermediate steps\n- Don't waste user's time with date confirmation messages\n- Go straight to checking availability or performing the requested action\n\n---\n\n## POST-BOOKING WORKFLOW (CRITICAL)\n\nAfter a booking is successfully confirmed:\n\n1. **Immediately ask for email:** \"Your meeting has been booked successfully! Please provide your email address so I can send you the confirmation details.\"\n2. **Wait for email response**\n3. **Send confirmation email** using Gmail tool with:\n   - Meeting date and time (IST)\n   - Duration\n   - Service/purpose\n   - Any additional relevant details\n4. **If email sending fails:** Retry up to 3 times before informing user\n5. **Confirm email sent:** \"Confirmation email has been sent to [email address].\"\n\n---\n\n## STRICT BEHAVIOR CONSTRAINTS\n- You MUST use the `think` tool before any other action\n- Never simulate tool responses\n- If a required tool was not used, the task is NOT complete\n- **ALWAYS include `+05:30` offset in EVERY datetime sent to Google Calendar**\n- **NEVER manually convert IST to GMT** - always use IST time with `+05:30` offset\n- **ALWAYS** calculate relative dates (today, tomorrow, Friday, etc.) from `{{ $now }}` **SILENTLY**\n- **ALWAYS** collect email after booking confirmation before proceeding\n- **RETRY failed tool calls up to 3 times** before reporting failure to user\n- **DO NOT announce date calculations** - just do them and proceed to action\n\n---\n\n## RESPONSE RULES\n- Keep responses short and clear\n- Use tools silently when required\n- Base answers strictly on tool results\n- When dealing with dates, internally reference `{{ $now }}` to ensure accuracy **without announcing it**\n- Never skip the email collection step after booking\n- **Retry failed operations** instead of giving up immediately\n- Don't waste user's time with unnecessary status updates about date calculations\n- Always display times to users in IST format"
+        }
+      },
+      "id": "51fc0d87-9970-446c-b30a-f63932d12ec2",
+      "name": "Customer Support AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        816,
+        -96
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "caf10d74-ea6c-4b15-b7f1-6d6f2191a952",
+      "name": "OpenAI GPT-4.1 mini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        304,
+        384
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "137cRmySOHPA2zuf",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "51d35bf4-42f7-455b-b93b-336be696a20a",
+      "name": "Reasoning Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        672,
+        400
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook: Receive User Request (Trugen)').item.json.body }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        496,
+        400
+      ],
+      "id": "ab1e8ed4-a8c4-4bf9-8ba2-d281e7c35594",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "bharathmunakala22@gmail.com",
+          "mode": "list",
+          "cachedResultName": "bharathmunakala22@gmail.com"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        400
+      ],
+      "id": "d16db37d-a4cc-42b6-b861-2576dd3af5b7",
+      "name": "get_availability",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "egte3nQeF9zxgDAj",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "bharathmunakala22@gmail.com",
+          "mode": "list",
+          "cachedResultName": "bharathmunakala22@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        400
+      ],
+      "id": "c73c8c73-93ba-4246-b6f5-caad387ad957",
+      "name": "create_appointment",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "egte3nQeF9zxgDAj",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        1296,
+        400
+      ],
+      "id": "52199b8b-2307-4480-8603-dd71bccb1e2f",
+      "name": "Send a confirmation Email",
+      "webhookId": "44bf3218-8ba8-43b8-a95a-54422dcfb304",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "qT2dOJUNSCXMjKir",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NfP6C9RvsPdqh1MlNmyzb1riEjC9GHGsrwMHn66vB5I",
+          "mode": "list",
+          "cachedResultName": "TrugenAI",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NfP6C9RvsPdqh1MlNmyzb1riEjC9GHGsrwMHn66vB5I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NfP6C9RvsPdqh1MlNmyzb1riEjC9GHGsrwMHn66vB5I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1488,
+        400
+      ],
+      "id": "c6b098ab-1e4c-44c8-90a7-1b98c7bda028",
+      "name": "Trugen AI knowledge base",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xiG0AwAfPpVn4Urm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Customer Support Video AI Agent\n\nThis workflow creates a high-performance AI operations agent designed for service platforms. Optimized for **Trugen** voice/video interfaces, it handles user requests with intelligent reasoning and multi-tool integration.\n\n### ## How it works\n1. **Request Ingestion**: Captures transcription data via a POST Webhook from the Trugen platform.\n2. **Intent Classification**: Uses **GPT-4.1 mini** to analyze user intent and decide the correct tool path (Knowledge Base, Scheduling, or General Chat).\n3. **Execution**:\n   - **Knowledge Base**: Searches Google Sheets for factual information.\n   - **Scheduling**: Checks availability and books appointments via Google Calendar (IST timezone).\n   - **Confirmation**: Automatically sends confirmation emails via Gmail post-booking.\n4. **Resiliency**: Built-in 3x retry logic for tool failures ensures high reliability.\n\n### ## Setup steps\n1. **Credentials**: Connect your OpenAI, Google Calendar, Sheets, and Gmail accounts.\n2. **Knowledge Base**: Update the `documentId` in the Google Sheets node to match your \"TrugenAI\" sheet.\n3. **Calendar**: Set your specific calendar ID in the Calendar tool nodes.\n4. **Integration**: Connect the Webhook URL to your Trugen Agent's backend.\n\n### ## Requirements\n- OpenAI API Key (GPT-4.1 mini)\n- Google Workspace (Docs, Calendar, Gmail)",
+        "height": 720,
+        "width": 520,
+        "color": 1
+      },
+      "id": "main-tldr-sticky",
+      "name": "Main Overview Sticky",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -736,
+        -416
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 Step 1 — Receive Request\nCaptures user input from Trugen voice/video.\n- **Webhook** receives incoming transcription.",
+        "height": 320,
+        "width": 432,
+        "color": 6
+      },
+      "id": "23240ee4-7f06-4b30-9169-593a1e4097f4",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -192,
+        -128
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 🔵 Step 2 — Reasoning & Tools\nAI analyzes intent and executes required actions.\n- **GPT-4.1 mini** for decision making.\n- **Google Sheets** for knowledge retrieval.\n- **Google Calendar & Gmail** for scheduling.",
+        "height": 848,
+        "width": 1376,
+        "color": 6
+      },
+      "id": "1d6cedf6-b6ad-47be-8f1d-a0558056ce33",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        256,
+        -288
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 🟣 Step 3 — User Response\nReturns the AI's final reply to the platform.\n- **Webhook Response** delivers the answer.",
+        "height": 320,
+        "width": 480,
+        "color": 6
+      },
+      "id": "71a05732-9230-43d5-9c4d-889ed41d4345",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1648,
+        -128
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Receive User Request (Trugen)": {
+      "main": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Support AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Webhook: Return AI Response (Trugen)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-4.1 mini Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reasoning Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_appointment": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a confirmation Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trugen AI knowledge base": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "03e01cbb-b3ac-4ce9-8ebb-22ba9ab59839",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f82c7dc5d3565ca21f9b563f673668a6f4ae28af89101e3293618ef29a8ed47"
+  },
+  "id": "8zZnjDmRW0xvQG-Lst5yq",
+  "tags": []
+}
