@@ -60,6 +60,11 @@ curl --request POST \
   "request_config": {
     "method": "POST",
     "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  },
+  "event_messages": {
+    "on_start": { "message": "Processing..." },
+    "on_success": { "message": "Success!" },
+    "on_error": { "message": "Failed." }
   }
 }'
 ```
@@ -88,6 +93,11 @@ curl --request POST \
   "request_config": {
     "method": "POST",
     "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  },
+  "event_messages": {
+    "on_start": { "message": "Processing..." },
+    "on_success": { "message": "Success!" },
+    "on_error": { "message": "Failed." }
   }
 }'
 ```
@@ -120,6 +130,11 @@ curl --request POST \
   "request_config": {
     "method": "POST",
     "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  },
+  "event_messages": {
+    "on_start": { "message": "Processing..." },
+    "on_success": { "message": "Success!" },
+    "on_error": { "message": "Failed." }
   }
 }'
 ```
@@ -147,6 +162,11 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "request_config": {
     "method": "POST",
     "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  },
+  "event_messages": {
+    "on_start": { "message": "Processing..." },
+    "on_success": { "message": "Success!" },
+    "on_error": { "message": "Failed." }
   }
 }'
 
@@ -170,6 +190,11 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "request_config": {
     "method": "POST",
     "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  },
+  "event_messages": {
+    "on_start": { "message": "Processing..." },
+    "on_success": { "message": "Success!" },
+    "on_error": { "message": "Failed." }
   }
 }'
 
@@ -197,6 +222,11 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "request_config": {
     "method": "POST",
     "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  },
+  "event_messages": {
+    "on_start": { "message": "Processing..." },
+    "on_success": { "message": "Success!" },
+    "on_error": { "message": "Failed." }
   }
 }'
 ```
