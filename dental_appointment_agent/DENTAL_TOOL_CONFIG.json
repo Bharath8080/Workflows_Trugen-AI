@@ -1,0 +1,134 @@
+[
+  {
+    "type": "tool.api",
+    "schema": {
+      "type": "function",
+      "name": "get_availability",
+      "description": "This tool checks whether a specific appointment time slot is available on the Pearly Whites Dental calendar using an n8n webhook.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appointmentStartTime": {
+            "type": "string",
+            "description": "The requested appointment start timestamp in Central Time that needs to be checked for availability."
+          }
+        },
+        "required": [
+          "appointmentStartTime"
+        ]
+      }
+    },
+    "request_config": {
+      "method": "POST",
+      "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID",
+      "headers": {}
+    },
+    "event_messages": {
+      "on_start": {
+        "message": "Checking the schedule..."
+      },
+      "on_success": {
+        "message": "Done!"
+      },
+      "on_delay": {
+        "delay": 3000,
+        "message": "Still working on that..."
+      },
+      "on_error": {
+        "message": "I encountered an error accessing the calendar."
+      }
+    }
+  },
+  {
+    "type": "tool.api",
+    "schema": {
+      "type": "function",
+      "name": "create_appointment",
+      "description": "This tool creates a dental appointment in the Pearly Whites Dental scheduling system via an n8n webhook.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appointmentStartTime": {
+            "type": "string",
+            "description": "The confirmed appointment start timestamp in Central Time. The appointment duration is automatically 1 hour."
+          }
+        },
+        "required": [
+          "appointmentStartTime"
+        ]
+      }
+    },
+    "request_config": {
+      "method": "POST",
+      "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID",
+      "headers": {}
+    },
+    "event_messages": {
+      "on_start": {
+        "message": "Booking your appointment..."
+      },
+      "on_success": {
+        "message": "Appointment created successfully!"
+      },
+      "on_error": {
+        "message": "Failed to create the appointment."
+      }
+    }
+  },
+  {
+    "type": "tool.api",
+    "schema": {
+      "type": "function",
+      "name": "log_patient_details",
+      "description": "This tool logs patient call details and appointment information into a Google Sheet via an n8n webhook.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "patientName": {
+            "type": "string",
+            "description": "Full name of the patient who called and booked the appointment."
+          },
+          "callTimestamp": {
+            "type": "string",
+            "description": "The timestamp representing when the patient call was handled. This must be derived from the system time."
+          },
+          "insuranceProvider": {
+            "type": "string",
+            "description": "The patient’s dental insurance provider."
+          },
+          "appointmentTimestamp": {
+            "type": "string",
+            "description": "The confirmed appointment start time that was scheduled using the create_appointment tool."
+          },
+          "questionsAndConcerns": {
+            "type": "string",
+            "description": "Any symptoms, dental issues, or questions the patient mentioned during the call. Leave empty if none were provided."
+          }
+        },
+        "required": [
+          "patientName",
+          "callTimestamp",
+          "insuranceProvider",
+          "appointmentTimestamp",
+          "questionsAndConcerns"
+        ]
+      }
+    },
+    "request_config": {
+      "method": "POST",
+      "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID",
+      "headers": {}
+    },
+    "event_messages": {
+      "on_start": {
+        "message": "Saving patient details..."
+      },
+      "on_success": {
+        "message": "Information saved."
+      },
+      "on_error": {
+        "message": "Failed to save information."
+      }
+    }
+  }
+]
