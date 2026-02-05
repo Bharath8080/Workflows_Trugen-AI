@@ -31,4 +31,4 @@ Each workflow resides in its own directory and includes:
 
 - **n8n**: A running instance (Cloud or Self-hosted).
 - **Trugen AI API Key**: Required for agent and tool creation.
-- **Service Specific Keys**: (e.g., Google Workspace, OpenAI, ElevenLabs) as specified in individual READMEs.
+- **Service Specific Keys**: (e.g., Google Workspace, OpenAI) as specified in individual READMEs.
