@@ -27,7 +27,7 @@ curl --request POST \
 **Using GitHub URL (No Download Needed):**
 
 ```bash
-curl -s https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/TRUGEN_AGENT_CONFIG.json | \
+curl -s https://raw.githubusercontent.com/Bharath8080/Workflows_Trugen-AI/refs/heads/main/TRUGEN_AGENT_CONFIG.json | \
 curl --request POST \
   --url https://api.trugen.ai/v1/ext/agent \
   --header "Content-Type: application/json" \
@@ -50,7 +50,7 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/agent" `
 **Using GitHub URL:**
 
 ```powershell
-$config = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/TRUGEN_AGENT_CONFIG.json"
+$config = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Bharath8080/Workflows_Trugen-AI/refs/heads/main/TRUGEN_AGENT_CONFIG.json"
 Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/agent" `
   -Headers @{ "Content-Type" = "application/json"; "x-api-key" = "YOUR_API_KEY" } `
   -Body ($config | ConvertTo-Json -Depth 10)
