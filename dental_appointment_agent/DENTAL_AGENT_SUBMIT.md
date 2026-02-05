@@ -247,7 +247,7 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
         },
         "insuranceProvider": {
           "type": "string",
-          "description": "The patient’s dental insurance provider."
+          "description": "The patient dental insurance provider."
         },
         "appointmentTimestamp": {
           "type": "string",
