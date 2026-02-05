@@ -45,14 +45,14 @@ curl --request POST \
   "type": "tool.api",
   "schema": {
     "type": "function",
-    "name": "N8n_Customer_Support",
+    "name": "n8n_tool",
     "description": "This agent searches workflows and data inside n8n and returns results via a Respond to Webhook node.",
     "parameters": {
       "type": "object",
       "properties": {
         "searchQuery": {
           "type": "string",
-          "description": "The search term is used to determine which relevant tool should be used."
+          "description": "The search term is used to determine which relevant tool should be used. The agent processes the request using the appropriate tool and sends the result back through the Respond to Webhook node."
         }
       },
       "required": ["searchQuery"]
@@ -79,12 +79,15 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   "type": "tool.api",
   "schema": {
     "type": "function",
-    "name": "N8n_Customer_Support",
+    "name": "n8n_tool",
     "description": "This agent searches workflows and data inside n8n and returns results via a Respond to Webhook node.",
     "parameters": {
       "type": "object",
       "properties": {
-        "searchQuery": { "type": "string", "description": "The search term." }
+        "searchQuery": {
+          "type": "string",
+          "description": "The search term is used to determine which relevant tool should be used. The agent processes the request using the appropriate tool and sends the result back through the Respond to Webhook node."
+        }
       },
       "required": ["searchQuery"]
     }
@@ -106,6 +109,6 @@ Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
 ## 🎨 Step 3: Finalizing Setup in Trugen Dashboard
 
 1.  **Log in**: Go to your [Trugen AI Dashboard](https://app.trugen.ai/).
-2.  **Verify**: Ensure agent **"Customer Support Agent"** and tool **"N8n_Customer_Support"** are visible.
-3.  **Edit Agent**: Link the **"N8n_Customer_Support"** tool.
+2.  **Verify**: Ensure agent **"Customer Support Agent"** and tool **"n8n_tool"** are visible.
+3.  **Edit Agent**: Link the **"n8n_tool"** tool.
 4.  **Save**: Click **Save Agent**.
