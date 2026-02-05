@@ -39,25 +39,89 @@ Run these commands to create the three tools required for the workflow. Replace 
 **1. Create `get_availability`:**
 
 ```bash
-curl --request POST --url https://api.trugen.ai/v1/ext/tool \
-  --header "Content-Type: application/json" --header "x-api-key: YOUR_API_KEY" \
-  --data '{"type":"tool.api","schema":{"type":"function","name":"get_availability","description":"Checks for available slots.","parameters":{"type":"object","properties":{"appointmentStartTime":{"type":"string"}},"required":["appointmentStartTime"]}},"request_config":{"method":"POST","url":"https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"}}'
+curl --request POST \
+  --url https://api.trugen.ai/v1/ext/tool \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data '{
+  "type": "tool.api",
+  "schema": {
+    "type": "function",
+    "name": "get_availability",
+    "description": "Checks for available time slots.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "appointmentStartTime": { "type": "string" }
+      },
+      "required": ["appointmentStartTime"]
+    }
+  },
+  "request_config": {
+    "method": "POST",
+    "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  }
+}'
 ```
 
 **2. Create `create_appointment`:**
 
 ```bash
-curl --request POST --url https://api.trugen.ai/v1/ext/tool \
-  --header "Content-Type: application/json" --header "x-api-key: YOUR_API_KEY" \
-  --data '{"type":"tool.api","schema":{"type":"function","name":"create_appointment","description":"Creates an appointment.","parameters":{"type":"object","properties":{"appointmentStartTime":{"type":"string"}},"required":["appointmentStartTime"]}},"request_config":{"method":"POST","url":"https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"}}'
+curl --request POST \
+  --url https://api.trugen.ai/v1/ext/tool \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data '{
+  "type": "tool.api",
+  "schema": {
+    "type": "function",
+    "name": "create_appointment",
+    "description": "Creates a dental appointment.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "appointmentStartTime": { "type": "string" }
+      },
+      "required": ["appointmentStartTime"]
+    }
+  },
+  "request_config": {
+    "method": "POST",
+    "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  }
+}'
 ```
 
 **3. Create `log_patient_details`:**
 
 ```bash
-curl --request POST --url https://api.trugen.ai/v1/ext/tool \
-  --header "Content-Type: application/json" --header "x-api-key: YOUR_API_KEY" \
-  --data '{"type":"tool.api","schema":{"type":"function","name":"log_patient_details","description":"Logs patient info.","parameters":{"type":"object","properties":{"patientName":{"type":"string"},"callTimestamp":{"type":"string"},"insuranceProvider":{"type":"string"},"appointmentTimestamp":{"type":"string"},"questionsAndConcerns":{"type":"string"}},"required":["patientName","callTimestamp","insuranceProvider","appointmentTimestamp","questionsAndConcerns"]}},"request_config":{"method":"POST","url":"https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"}}'
+curl --request POST \
+  --url https://api.trugen.ai/v1/ext/tool \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY" \
+  --data '{
+  "type": "tool.api",
+  "schema": {
+    "type": "function",
+    "name": "log_patient_details",
+    "description": "Logs patient info.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "patientName": { "type": "string" },
+        "callTimestamp": { "type": "string" },
+        "insuranceProvider": { "type": "string" },
+        "appointmentTimestamp": { "type": "string" },
+        "questionsAndConcerns": { "type": "string" }
+      },
+      "required": ["patientName", "callTimestamp", "insuranceProvider", "appointmentTimestamp", "questionsAndConcerns"]
+    }
+  },
+  "request_config": {
+    "method": "POST",
+    "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  }
+}'
 ```
 
 ### 💙 Windows PowerShell
@@ -66,17 +130,75 @@ curl --request POST --url https://api.trugen.ai/v1/ext/tool \
 # 1. get_availability
 Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   -Headers @{ "Content-Type" = "application/json"; "x-api-key" = "YOUR_API_KEY" } `
-  -Body '{"type":"tool.api","schema":{"type":"function","name":"get_availability","description":"Checks slots.","parameters":{"type":"object","properties":{"appointmentStartTime":{"type":"string"}},"required":["appointmentStartTime"]}},"request_config":{"method":"POST","url":"https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"}}'
+  -Body '{
+  "type": "tool.api",
+  "schema": {
+    "type": "function",
+    "name": "get_availability",
+    "description": "Checks for available slots.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "appointmentStartTime": { "type": "string" }
+      },
+      "required": ["appointmentStartTime"]
+    }
+  },
+  "request_config": {
+    "method": "POST",
+    "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  }
+}'
 
 # 2. create_appointment
 Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   -Headers @{ "Content-Type" = "application/json"; "x-api-key" = "YOUR_API_KEY" } `
-  -Body '{"type":"tool.api","schema":{"type":"function","name":"create_appointment","description":"Creates appt.","parameters":{"type":"object","properties":{"appointmentStartTime":{"type":"string"}},"required":["appointmentStartTime"]}},"request_config":{"method":"POST","url":"https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"}}'
+  -Body '{
+  "type": "tool.api",
+  "schema": {
+    "type": "function",
+    "name": "create_appointment",
+    "description": "Creates an appointment.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "appointmentStartTime": { "type": "string" }
+      },
+      "required": ["appointmentStartTime"]
+    }
+  },
+  "request_config": {
+    "method": "POST",
+    "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  }
+}'
 
 # 3. log_patient_details
 Invoke-RestMethod -Method Post -Uri "https://api.trugen.ai/v1/ext/tool" `
   -Headers @{ "Content-Type" = "application/json"; "x-api-key" = "YOUR_API_KEY" } `
-  -Body '{"type":"tool.api","schema":{"type":"function","name":"log_patient_details","description":"Logs info.","parameters":{"type":"object","properties":{"patientName":{"type":"string"},"callTimestamp":{"type":"string"},"insuranceProvider":{"type":"string"},"appointmentTimestamp":{"type":"string"},"questionsAndConcerns":{"type":"string"}},"required":["patientName","callTimestamp","insuranceProvider","appointmentTimestamp","questionsAndConcerns"]}},"request_config":{"method":"POST","url":"https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"}}'
+  -Body '{
+  "type": "tool.api",
+  "schema": {
+    "type": "function",
+    "name": "log_patient_details",
+    "description": "Logs patient info.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "patientName": { "type": "string" },
+        "callTimestamp": { "type": "string" },
+        "insuranceProvider": { "type": "string" },
+        "appointmentTimestamp": { "type": "string" },
+        "questionsAndConcerns": { "type": "string" }
+      },
+      "required": ["patientName", "callTimestamp", "insuranceProvider", "appointmentTimestamp", "questionsAndConcerns"]
+    }
+  },
+  "request_config": {
+    "method": "POST",
+    "url": "https://YOUR_SUBDOMAIN.n8n.cloud/webhook/YOUR_UNIQUE_ID"
+  }
+}'
 ```
 
 ---
