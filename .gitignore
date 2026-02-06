@@ -1,0 +1,7 @@
+trugen_n8n_agent/
+node_modules/
+.env
+.npm
+dist/
+build/
+*.log
