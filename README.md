@@ -4,13 +4,15 @@ A collection of standardized n8n workflows integrated with Trugen AI agents for 
 
 ## 🚀 Included Workflows
 
-This repository contains five primary AI-driven workflows, each designed for a specific industrial use case:
+This repository contains five primary AI-driven workflows, categorized by their integration method with Trugen AI:
 
-1.  **Dental Appointment Agent**: Handles appointment scheduling, availability checks, and patient logging for dental clinics.
-2.  **HR Interview Agent**: Automates initial candidate screening and technical interviews with video AI capabilities.
-3.  **Sales Qualification Agent**: Qualifies leads through conversational AI and synchronizes data with CRM systems.
-4.  **Sentiment Analysis Agent**: Processes customer feedback, analyzes sentiment (CSAT), and logs insights.
-5.  **Customer Support Agent**: Provides automated responses to common customer inquiries using n8n-integrated tools.
+| Agent Name                    | Integration Method               | Primary Function                                                                        |
+| :---------------------------- | :------------------------------- | :-------------------------------------------------------------------------------------- |
+| **Customer Support Agent**    | **Function Calling**             | Automated responses to common customer inquiries using n8n-integrated tools.            |
+| **Dental Appointment Agent**  | **Function Calling**             | Handles appointment scheduling, availability checks, and patient logging.               |
+| **HR Interview Agent**        | **Post Call via Trugen AI Node** | Automates initial candidate screening and technical interviews with summary processing. |
+| **Sales Qualification Agent** | **Post Call via Trugen AI Node** | Qualifies leads through conversational AI and synchronizes data with CRM systems.       |
+| **Sentiment Analysis Agent**  | **Post Call via Trugen AI Node** | Processes customer feedback, analyzes sentiment (CSAT), and logs insights.              |
 
 ## 📁 Repository Structure
 
@@ -19,6 +21,7 @@ Each workflow resides in its own directory and includes:
 - **n8n Workflow JSON**: Ready-to-import workflow file.
 - **README.md**: Detailed setup guide and technical requirements.
 - **TLDR.md**: High-level overview of the agent's purpose and logic flow.
+- **Quickstart.md**: Commands to create the agent and tools via API.
 - **Agent Configuration (JSON)**: Trugen AI agent persona and model settings.
 
 ## 🛠️ Getting Started
